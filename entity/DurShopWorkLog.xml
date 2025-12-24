@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">
+
+    <entity entity-name="DurShopWorkLog" package-name="durion.shopmgr" table-name="DUR_SHOP_WORK_LOG">
+        <description>Time tracking for work performed on vehicles</description>
+        <field name="workLogId" type="id" is-pk="true"/>
+        <field name="appointmentId" type="id">
+            <description>Associated appointment</description>
+        </field>
+        <field name="shopVehicleId" type="id">
+            <description>Associated vehicle in shop</description>
+        </field>
+        <field name="mechanicId" type="id" required="true"/>
+        <field name="workDate" type="date" required="true"/>
+        <field name="startTime" type="date-time" required="true"/>
+        <field name="endTime" type="date-time"/>
+        <field name="hoursWorked" type="number-decimal">
+            <description>Calculated or manually entered hours</description>
+        </field>
+        <field name="serviceTypeId" type="id">
+            <description>Type of service performed</description>
+        </field>
+        <field name="operationId" type="id">
+            <description>Link to service operation in durion-product</description>
+        </field>
+        <field name="description" type="text-long">
+            <description>Work performed description</description>
+        </field>
+        <field name="statusId" type="text-short" default="WORK_IN_PROGRESS">
+            <description>WORK_IN_PROGRESS, WORK_COMPLETED, WORK_PAUSED</description>
+        </field>
+        <field name="billableHours" type="number-decimal">
+            <description>Hours to bill customer (may differ from actual)</description>
+        </field>
+        <field name="notes" type="text-long"/>
+        <field name="createdDate" type="date-time" default="ec.user.nowTimestamp"/>
+        <field name="updatedDate" type="date-time" update="ec.user.nowTimestamp"/>
+        <relationship type="one" related-entity-name="DurShopAppointment" short-alias="appointment">
+            <key-map field-name="appointmentId" related-field-name="appointmentId"/>
+        </relationship>
+        <relationship type="one" related-entity-name="DurShopVehicle" short-alias="vehicle">
+            <key-map field-name="shopVehicleId" related-field-name="shopVehicleId"/>
+        </relationship>
+        <relationship type="one" related-entity-name="DurShopMechanic" short-alias="mechanic">
+            <key-map field-name="mechanicId" related-field-name="mechanicId"/>
+        </relationship>
+        <relationship type="one" related-entity-name="DurShopServiceType" short-alias="serviceType">
+            <key-map field-name="serviceTypeId" related-field-name="serviceTypeId"/>
+        </relationship>
+    </entity>
+
+</entities>

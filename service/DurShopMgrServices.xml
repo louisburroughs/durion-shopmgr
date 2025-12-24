@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+
+    <!-- Mechanic Services -->
+    <service verb="create" noun="Mechanic">
+        <in-parameters>
+            <parameter name="personId"/>
+            <parameter name="firstName" required="true"/>
+            <parameter name="lastName" required="true"/>
+            <parameter name="employeeNumber"/>
+            <parameter name="email"/>
+            <parameter name="phone"/>
+            <parameter name="skillLevel"/>
+            <parameter name="specializations"/>
+            <parameter name="certifications"/>
+            <parameter name="hourlyRate" type="BigDecimal"/>
+            <parameter name="hireDate" type="Date"/>
+            <parameter name="statusId" default="MECHANIC_ACTIVE"/>
+            <parameter name="notes"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="mechanicId" required="true"/>
+        </out-parameters>
+        <actions>
+            <service-call name="create#DurShopMechanic" in-map="context" out-map="context"/>
+        </actions>
+    </service>
+
+    <service verb="update" noun="Mechanic">
+        <in-parameters>
+            <parameter name="mechanicId" required="true"/>
+            <parameter name="firstName"/>
+            <parameter name="lastName"/>
+            <parameter name="employeeNumber"/>
+            <parameter name="email"/>
+            <parameter name="phone"/>
+            <parameter name="skillLevel"/>
+            <parameter name="specializations"/>
+            <parameter name="certifications"/>
+            <parameter name="hourlyRate" type="BigDecimal"/>
+            <parameter name="hireDate" type="Date"/>
+            <parameter name="statusId"/>
+            <parameter name="notes"/>
+        </in-parameters>
+        <actions>
+            <service-call name="update#DurShopMechanic" in-map="context"/>
+        </actions>
+    </service>
+
+    <!-- Location Services -->
+    <service verb="create" noun="Location">
+        <in-parameters>
+            <parameter name="locationName" required="true"/>
+            <parameter name="locationCode"/>
+            <parameter name="locationType"/>
+            <parameter name="facilityId"/>
+            <parameter name="capacity" type="Integer" default="1"/>
+            <parameter name="equipment"/>
+            <parameter name="statusId" default="LOCATION_AVAILABLE"/>
+            <parameter name="notes"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="locationId" required="true"/>
+        </out-parameters>
+        <actions>
+            <service-call name="create#DurShopLocation" in-map="context" out-map="context"/>
+        </actions>
+    </service>
+
+    <service verb="update" noun="Location">
+        <in-parameters>
+            <parameter name="locationId" required="true"/>
+            <parameter name="locationName"/>
+            <parameter name="locationCode"/>
+            <parameter name="locationType"/>
+            <parameter name="capacity" type="Integer"/>
+            <parameter name="equipment"/>
+            <parameter name="statusId"/>
+            <parameter name="notes"/>
+        </in-parameters>
+        <actions>
+            <service-call name="update#DurShopLocation" in-map="context"/>
+        </actions>
+    </service>
+
+    <!-- Appointment Services -->
+    <service verb="create" noun="Appointment">
+        <in-parameters>
+            <parameter name="customerId" required="true"/>
+            <parameter name="vehicleId" required="true"/>
+            <parameter name="appointmentDate" type="Timestamp" required="true"/>
+            <parameter name="estimatedDuration" type="BigDecimal"/>
+            <parameter name="scheduledStartTime" type="Timestamp"/>
+            <parameter name="scheduledEndTime" type="Timestamp"/>
+            <parameter name="mechanicId"/>
+            <parameter name="locationId"/>
+            <parameter name="serviceTypes"/>
+            <parameter name="description"/>
+            <parameter name="priority" default="NORMAL"/>
+            <parameter name="statusId" default="APPT_SCHEDULED"/>
+            <parameter name="notes"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="appointmentId" required="true"/>
+        </out-parameters>
+        <actions>
+            <service-call name="create#DurShopAppointment" in-map="context" out-map="context"/>
+        </actions>
+    </service>
+
+    <service verb="update" noun="Appointment">
+        <in-parameters>
+            <parameter name="appointmentId" required="true"/>
+            <parameter name="appointmentDate" type="Timestamp"/>
+            <parameter name="estimatedDuration" type="BigDecimal"/>
+            <parameter name="scheduledStartTime" type="Timestamp"/>
+            <parameter name="scheduledEndTime" type="Timestamp"/>
+            <parameter name="actualStartTime" type="Timestamp"/>
+            <parameter name="actualEndTime" type="Timestamp"/>
+            <parameter name="mechanicId"/>
+            <parameter name="locationId"/>
+            <parameter name="serviceTypes"/>
+            <parameter name="description"/>
+            <parameter name="priority"/>
+            <parameter name="statusId"/>
+            <parameter name="orderId"/>
+            <parameter name="notes"/>
+        </in-parameters>
+        <actions>
+            <service-call name="update#DurShopAppointment" in-map="context"/>
+        </actions>
+    </service>
+
+    <service verb="cancel" noun="Appointment">
+        <in-parameters>
+            <parameter name="appointmentId" required="true"/>
+            <parameter name="reason"/>
+        </in-parameters>
+        <actions>
+            <service-call name="update#DurShopAppointment">
+                <field-map field-name="appointmentId" from="appointmentId"/>
+                <field-map field-name="statusId" value="APPT_CANCELLED"/>
+                <field-map field-name="notes" from="reason"/>
+            </service-call>
+        </actions>
+    </service>
+
+    <!-- Vehicle Check-In/Out Services -->
+    <service verb="checkIn" noun="Vehicle">
+        <in-parameters>
+            <parameter name="vehicleId" required="true"/>
+            <parameter name="appointmentId"/>
+            <parameter name="checkInMileage" type="Integer"/>
+            <parameter name="locationId"/>
+            <parameter name="mechanicId"/>
+            <parameter name="keyLocation"/>
+            <parameter name="personalItems"/>
+            <parameter name="notes"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="shopVehicleId" required="true"/>
+        </out-parameters>
+        <actions>
+            <set field="checkInDate" from="ec.user.nowTimestamp"/>
+            <set field="statusId" value="VEHICLE_CHECKED_IN"/>
+            <service-call name="create#DurShopVehicle" in-map="context" out-map="context"/>
+        </actions>
+    </service>
+
+    <service verb="checkOut" noun="Vehicle">
+        <in-parameters>
+            <parameter name="shopVehicleId" required="true"/>
+            <parameter name="checkOutMileage" type="Integer"/>
+        </in-parameters>
+        <actions>
+            <set field="checkOutDate" from="ec.user.nowTimestamp"/>
+            <set field="statusId" value="VEHICLE_CHECKED_OUT"/>
+            <service-call name="update#DurShopVehicle" in-map="context"/>
+        </actions>
+    </service>
+
+    <!-- Work Log Services -->
+    <service verb="create" noun="WorkLog">
+        <in-parameters>
+            <parameter name="appointmentId"/>
+            <parameter name="shopVehicleId"/>
+            <parameter name="mechanicId" required="true"/>
+            <parameter name="workDate" type="Date" required="true"/>
+            <parameter name="startTime" type="Timestamp" required="true"/>
+            <parameter name="endTime" type="Timestamp"/>
+            <parameter name="hoursWorked" type="BigDecimal"/>
+            <parameter name="serviceTypeId"/>
+            <parameter name="operationId"/>
+            <parameter name="description"/>
+            <parameter name="billableHours" type="BigDecimal"/>
+            <parameter name="statusId" default="WORK_IN_PROGRESS"/>
+            <parameter name="notes"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="workLogId" required="true"/>
+        </out-parameters>
+        <actions>
+            <service-call name="create#DurShopWorkLog" in-map="context" out-map="context"/>
+        </actions>
+    </service>
+
+    <service verb="complete" noun="WorkLog">
+        <in-parameters>
+            <parameter name="workLogId" required="true"/>
+            <parameter name="endTime" type="Timestamp"/>
+            <parameter name="hoursWorked" type="BigDecimal"/>
+            <parameter name="billableHours" type="BigDecimal"/>
+        </in-parameters>
+        <actions>
+            <if condition="!endTime">
+                <set field="endTime" from="ec.user.nowTimestamp"/>
+            </if>
+            <set field="statusId" value="WORK_COMPLETED"/>
+            <service-call name="update#DurShopWorkLog" in-map="context"/>
+        </actions>
+    </service>
+
+    <!-- Service Type Services -->
+    <service verb="create" noun="ServiceType">
+        <in-parameters>
+            <parameter name="serviceTypeName" required="true"/>
+            <parameter name="serviceTypeCode"/>
+            <parameter name="category"/>
+            <parameter name="description"/>
+            <parameter name="estimatedDuration" type="BigDecimal"/>
+            <parameter name="requiredSkillLevel"/>
+            <parameter name="statusId" default="SERVICE_TYPE_ACTIVE"/>
+            <parameter name="notes"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="serviceTypeId" required="true"/>
+        </out-parameters>
+        <actions>
+            <service-call name="create#DurShopServiceType" in-map="context" out-map="context"/>
+        </actions>
+    </service>
+
+    <!-- Business Logic Services -->
+    <service verb="assign" noun="MechanicToAppointment" type="script"
+             location="component://durion-shopmgr/script/groovy/DurShopMgrServices.groovy"
+             method="assignMechanicToAppointment">
+        <description>Assign mechanic to appointment with availability check</description>
+        <in-parameters>
+            <parameter name="appointmentId" required="true"/>
+            <parameter name="mechanicId" required="true"/>
+        </in-parameters>
+    </service>
+
+    <service verb="assign" noun="LocationToAppointment" type="script"
+             location="component://durion-shopmgr/script/groovy/DurShopMgrServices.groovy"
+             method="assignLocationToAppointment">
+        <description>Assign bay/location to appointment with availability check</description>
+        <in-parameters>
+            <parameter name="appointmentId" required="true"/>
+            <parameter name="locationId" required="true"/>
+        </in-parameters>
+    </service>
+
+    <service verb="get" noun="MechanicAvailability" type="script"
+             location="component://durion-shopmgr/script/groovy/DurShopMgrServices.groovy"
+             method="getMechanicAvailability">
+        <description>Get mechanic availability for date range</description>
+        <in-parameters>
+            <parameter name="mechanicId" required="true"/>
+            <parameter name="fromDate" type="Date" required="true"/>
+            <parameter name="thruDate" type="Date" required="true"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="availableSlots" type="List"/>
+        </out-parameters>
+    </service>
+
+    <service verb="calculate" noun="WorkLogHours" type="script"
+             location="component://durion-shopmgr/script/groovy/DurShopMgrServices.groovy"
+             method="calculateWorkLogHours">
+        <description>Calculate hours from start/end times</description>
+        <in-parameters>
+            <parameter name="workLogId" required="true"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="hoursWorked" type="BigDecimal"/>
+        </out-parameters>
+    </service>
+
+</services>

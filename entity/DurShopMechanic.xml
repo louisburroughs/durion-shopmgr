@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">
+
+    <entity entity-name="DurShopMechanic" package-name="durion.shopmgr" table-name="DUR_SHOP_MECHANIC">
+        <description>Shop mechanics/technicians with skills and certifications</description>
+        <field name="mechanicId" type="id" is-pk="true"/>
+        <field name="personId" type="id">
+            <description>Link to person in durion-hr</description>
+        </field>
+        <field name="firstName" type="text-medium" required="true"/>
+        <field name="lastName" type="text-medium" required="true"/>
+        <field name="employeeNumber" type="text-short"/>
+        <field name="email" type="text-medium"/>
+        <field name="phone" type="text-short"/>
+        <field name="skillLevel" type="text-short">
+            <description>APPRENTICE, JOURNEYMAN, MASTER, ASE_CERTIFIED</description>
+        </field>
+        <field name="specializations" type="text-medium">
+            <description>Comma-separated list: BRAKES, ELECTRICAL, ENGINE, TRANSMISSION, TIRES</description>
+        </field>
+        <field name="certifications" type="text-long">
+            <description>Professional certifications</description>
+        </field>
+        <field name="hourlyRate" type="currency-amount">
+            <description>Mechanic hourly rate for labor costing</description>
+        </field>
+        <field name="hireDate" type="date"/>
+        <field name="statusId" type="text-short" default="MECHANIC_ACTIVE">
+            <description>MECHANIC_ACTIVE, MECHANIC_INACTIVE, MECHANIC_ON_LEAVE</description>
+        </field>
+        <field name="notes" type="text-long"/>
+        <field name="createdDate" type="date-time" default="ec.user.nowTimestamp"/>
+        <field name="updatedDate" type="date-time" update="ec.user.nowTimestamp"/>
+    </entity>
+
+</entities>

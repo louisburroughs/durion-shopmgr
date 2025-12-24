@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+        default-menu-title="Shop Schedule Board"
+        default-menu-index="5">
+
+    <parameter name="viewDate"/>
+
+    <actions>
+        <if condition="!viewDate">
+            <set field="viewDate" from="ec.l10n.format(ec.user.nowTimestamp, 'yyyy-MM-dd')"/>
+        </if>
+
+        <!-- Get all active mechanics -->
+        <entity-find entity-name="durion.shopmgr.DurShopMechanic" list="mechanicList">
+            <econdition field-name="statusId" value="MECHANIC_ACTIVE"/>
+            <order-by field-name="lastName,firstName"/>
+        </entity-find>
+
+        <!-- Get all available locations -->
+        <entity-find entity-name="durion.shopmgr.DurShopLocation" list="locationList">
+            <econdition field-name="statusId" operator="not-equals" value="LOCATION_OUT_OF_SERVICE"/>
+            <order-by field-name="locationName"/>
+        </entity-find>
+
+        <!-- Get all appointments for the date -->
+        <entity-find entity-name="durion.shopmgr.DurShopAppointment" list="appointmentList">
+            <econdition field-name="appointmentDate" operator="greater-equals" from="viewDate"/>
+            <econdition field-name="appointmentDate" operator="less" 
+                from="ec.l10n.parseTimestamp(viewDate, 'yyyy-MM-dd').plus(1, java.time.temporal.ChronoUnit.DAYS)"/>
+            <econdition field-name="statusId" operator="in" value="APPT_SCHEDULED,APPT_CONFIRMED,APPT_IN_PROGRESS"/>
+            <order-by field-name="appointmentDate"/>
+        </entity-find>
+
+        <!-- Get vehicles currently in shop -->
+        <entity-find entity-name="durion.shopmgr.DurShopVehicle" list="shopVehicleList">
+            <econdition field-name="statusId" operator="in" value="VEHICLE_CHECKED_IN,VEHICLE_IN_PROGRESS"/>
+            <order-by field-name="checkInDate"/>
+        </entity-find>
+    </actions>
+
+    <widgets>
+        <form-single name="DateSelector" transition=".">
+            <field name="viewDate"><default-field title="View Date">
+                <date-time type="date"/>
+            </default-field></field>
+            <field name="submitButton"><default-field title="View"><submit/></default-field></field>
+        </form-single>
+
+        <container-row>
+            <row-col lg="6">
+                <container-box>
+                    <box-header title="Scheduled Appointments - ${viewDate}"/>
+                    <box-body>
+                        <form-list name="AppointmentList" list="appointmentList" skip-form="true">
+                            <field name="appointmentDate"><default-field title="Time"><display format="HH:mm"/></default-field></field>
+                            <field name="customerId"><default-field title="Customer">
+                                <display-entity entity-name="durion.crm.DurCustomer" text="${firstName} ${lastName}"/>
+                            </default-field></field>
+                            <field name="vehicleId"><default-field title="Vehicle">
+                                <display-entity entity-name="durion.crm.DurVehicle" text="${year} ${make} ${model}"/>
+                            </default-field></field>
+                            <field name="mechanicId"><default-field title="Mechanic">
+                                <display-entity entity-name="durion.shopmgr.DurShopMechanic" text="${firstName} ${lastName}"/>
+                            </default-field></field>
+                            <field name="locationId"><default-field title="Bay">
+                                <display-entity entity-name="durion.shopmgr.DurShopLocation" text="${locationCode}"/>
+                            </default-field></field>
+                            <field name="statusId"><default-field title="Status"><display/></default-field></field>
+                        </form-list>
+                    </box-body>
+                </container-box>
+            </row-col>
+
+            <row-col lg="6">
+                <container-box>
+                    <box-header title="Vehicles Currently in Shop"/>
+                    <box-body>
+                        <form-list name="ShopVehicleList" list="shopVehicleList" skip-form="true">
+                            <field name="vehicleId"><default-field title="Vehicle">
+                                <display-entity entity-name="durion.crm.DurVehicle" text="${year} ${make} ${model}"/>
+                            </default-field></field>
+                            <field name="checkInDate"><default-field title="Checked In"><display format="HH:mm"/></default-field></field>
+                            <field name="checkInMileage"><default-field title="Mileage"><display/></default-field></field>
+                            <field name="mechanicId"><default-field title="Mechanic">
+                                <display-entity entity-name="durion.shopmgr.DurShopMechanic" text="${firstName} ${lastName}"/>
+                            </default-field></field>
+                            <field name="locationId"><default-field title="Bay">
+                                <display-entity entity-name="durion.shopmgr.DurShopLocation" text="${locationCode}"/>
+                            </default-field></field>
+                            <field name="statusId"><default-field title="Status"><display/></default-field></field>
+                        </form-list>
+                    </box-body>
+                </container-box>
+
+                <container-box>
+                    <box-header title="Mechanic Status"/>
+                    <box-body>
+                        <form-list name="MechanicList" list="mechanicList" skip-form="true">
+                            <field name="mechanicId"><default-field title="ID"><display/></default-field></field>
+                            <field name="firstName"><default-field><display/></default-field></field>
+                            <field name="lastName"><default-field><display/></default-field></field>
+                            <field name="skillLevel"><default-field><display/></default-field></field>
+                            <field name="statusId"><default-field title="Status"><display/></default-field></field>
+                        </form-list>
+                    </box-body>
+                </container-box>
+            </row-col>
+        </container-row>
+    </widgets>
+</screen>

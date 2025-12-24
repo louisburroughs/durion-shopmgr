@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+        default-menu-title="Mechanic Calendar"
+        default-menu-index="4">
+
+    <parameter name="mechanicId"/>
+    <parameter name="fromDate"/>
+    <parameter name="thruDate"/>
+
+    <transition name="getAvailability">
+        <service-call name="durion.shopmgr.DurShopMgrServices.get#MechanicAvailability"/>
+        <default-response url="."/>
+    </transition>
+
+    <actions>
+        <if condition="!fromDate">
+            <set field="fromDate" from="ec.l10n.format(ec.user.nowTimestamp, 'yyyy-MM-dd')"/>
+        </if>
+        <if condition="!thruDate">
+            <set field="thruDate" from="ec.l10n.format(ec.user.nowTimestamp.plus(7, java.time.temporal.ChronoUnit.DAYS), 'yyyy-MM-dd')"/>
+        </if>
+
+        <entity-find entity-name="durion.shopmgr.DurShopMechanic" list="mechanicList">
+            <econdition field-name="statusId" value="MECHANIC_ACTIVE"/>
+            <order-by field-name="lastName,firstName"/>
+        </entity-find>
+
+        <if condition="mechanicId">
+            <entity-find entity-name="durion.shopmgr.DurShopAppointment" list="appointmentList">
+                <econdition field-name="mechanicId" from="mechanicId"/>
+                <econdition field-name="appointmentDate" operator="greater-equals" from="fromDate"/>
+                <econdition field-name="appointmentDate" operator="less-equals" from="thruDate"/>
+                <econdition field-name="statusId" operator="in" value="APPT_SCHEDULED,APPT_CONFIRMED,APPT_IN_PROGRESS"/>
+                <order-by field-name="appointmentDate"/>
+            </entity-find>
+        </if>
+    </actions>
+
+    <widgets>
+        <container-row>
+            <row-col lg="3">
+                <form-single name="FilterForm" transition="getAvailability">
+                    <field name="mechanicId"><default-field title="Mechanic">
+                        <drop-down allow-empty="true">
+                            <list-options list="mechanicList" key="${mechanicId}" text="${firstName} ${lastName}"/>
+                        </drop-down>
+                    </default-field></field>
+                    <field name="fromDate"><default-field><date-time type="date"/></default-field></field>
+                    <field name="thruDate"><default-field title="To Date"><date-time type="date"/></default-field></field>
+                    <field name="submitButton"><default-field title="View Calendar"><submit/></default-field></field>
+                </form-single>
+            </row-col>
+
+            <row-col lg="9">
+                <section name="CalendarSection">
+                    <condition><expression>mechanicId</expression></condition>
+                    <widgets>
+                        <container-box>
+                            <box-header title="Appointments for ${mechanicId}"/>
+                            <box-body>
+                                <form-list name="AppointmentList" list="appointmentList" skip-form="true">
+                                    <field name="appointmentDate"><default-field><display format="EEE, MMM dd yyyy HH:mm"/></default-field></field>
+                                    <field name="customerId"><default-field title="Customer">
+                                        <display-entity entity-name="durion.crm.DurCustomer" text="${firstName} ${lastName}"/>
+                                    </default-field></field>
+                                    <field name="vehicleId"><default-field title="Vehicle">
+                                        <display-entity entity-name="durion.crm.DurVehicle" text="${year} ${make} ${model}"/>
+                                    </default-field></field>
+                                    <field name="serviceTypes"><default-field><display/></default-field></field>
+                                    <field name="estimatedDuration"><default-field title="Est. Hours"><display format="#0.0"/></default-field></field>
+                                    <field name="statusId"><default-field title="Status"><display/></default-field></field>
+                                </form-list>
+                            </box-body>
+                        </container-box>
+                    </widgets>
+                </section>
+            </row-col>
+        </container-row>
+    </widgets>
+</screen>

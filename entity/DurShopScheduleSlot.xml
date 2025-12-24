@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">
+
+    <entity entity-name="DurShopScheduleSlot" package-name="durion.shopmgr" table-name="DUR_SHOP_SCHEDULE_SLOT">
+        <description>Available time slots for scheduling appointments</description>
+        <field name="scheduleSlotId" type="id" is-pk="true"/>
+        <field name="slotDate" type="date" required="true"/>
+        <field name="slotStartTime" type="time" required="true"/>
+        <field name="slotEndTime" type="time" required="true"/>
+        <field name="mechanicId" type="id">
+            <description>Available mechanic for this slot</description>
+        </field>
+        <field name="locationId" type="id">
+            <description>Available location/bay for this slot</description>
+        </field>
+        <field name="capacity" type="number-integer" default="1">
+            <description>Number of appointments that can be booked</description>
+        </field>
+        <field name="bookedCount" type="number-integer" default="0">
+            <description>Number of appointments currently booked</description>
+        </field>
+        <field name="statusId" type="text-short" default="SLOT_AVAILABLE">
+            <description>SLOT_AVAILABLE, SLOT_BOOKED, SLOT_BLOCKED</description>
+        </field>
+        <field name="notes" type="text-short"/>
+        <field name="createdDate" type="date-time" default="ec.user.nowTimestamp"/>
+        <field name="updatedDate" type="date-time" update="ec.user.nowTimestamp"/>
+        <relationship type="one" related-entity-name="DurShopMechanic" short-alias="mechanic">
+            <key-map field-name="mechanicId" related-field-name="mechanicId"/>
+        </relationship>
+        <relationship type="one" related-entity-name="DurShopLocation" short-alias="location">
+            <key-map field-name="locationId" related-field-name="locationId"/>
+        </relationship>
+    </entity>
+
+</entities>

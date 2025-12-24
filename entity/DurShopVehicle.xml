@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">
+
+    <entity entity-name="DurShopVehicle" package-name="durion.shopmgr" table-name="DUR_SHOP_VEHICLE">
+        <description>Vehicles currently in shop for service (temporary tracking)</description>
+        <field name="shopVehicleId" type="id" is-pk="true"/>
+        <field name="vehicleId" type="id" required="true">
+            <description>Link to vehicle in durion-crm</description>
+        </field>
+        <field name="appointmentId" type="id">
+            <description>Associated appointment</description>
+        </field>
+        <field name="checkInDate" type="date-time" required="true"/>
+        <field name="checkInMileage" type="number-integer">
+            <description>Odometer reading at check-in</description>
+        </field>
+        <field name="checkOutDate" type="date-time"/>
+        <field name="checkOutMileage" type="number-integer"/>
+        <field name="locationId" type="id">
+            <description>Current bay/location</description>
+        </field>
+        <field name="mechanicId" type="id">
+            <description>Assigned mechanic</description>
+        </field>
+        <field name="statusId" type="text-short" default="VEHICLE_CHECKED_IN">
+            <description>VEHICLE_CHECKED_IN, VEHICLE_IN_PROGRESS, VEHICLE_COMPLETED, VEHICLE_CHECKED_OUT</description>
+        </field>
+        <field name="keyLocation" type="text-short">
+            <description>Where keys are stored</description>
+        </field>
+        <field name="personalItems" type="text-medium">
+            <description>Personal items left in vehicle</description>
+        </field>
+        <field name="notes" type="text-long"/>
+        <field name="createdDate" type="date-time" default="ec.user.nowTimestamp"/>
+        <field name="updatedDate" type="date-time" update="ec.user.nowTimestamp"/>
+        <relationship type="one" related-entity-name="DurShopAppointment" short-alias="appointment">
+            <key-map field-name="appointmentId" related-field-name="appointmentId"/>
+        </relationship>
+        <relationship type="one" related-entity-name="DurShopLocation" short-alias="location">
+            <key-map field-name="locationId" related-field-name="locationId"/>
+        </relationship>
+        <relationship type="one" related-entity-name="DurShopMechanic" short-alias="mechanic">
+            <key-map field-name="mechanicId" related-field-name="mechanicId"/>
+        </relationship>
+    </entity>
+
+</entities>

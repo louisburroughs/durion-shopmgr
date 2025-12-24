@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+        default-menu-title="Edit Work Log"
+        default-menu-include="false">
+
+    <parameter name="workLogId" required="true"/>
+
+    <transition name="updateWorkLog">
+        <service-call name="update#DurShopWorkLog"/>
+        <default-response url="."/>
+    </transition>
+
+    <transition name="completeWorkLog">
+        <service-call name="durion.shopmgr.DurShopMgrServices.complete#WorkLog"/>
+        <default-response url="."/>
+    </transition>
+
+    <transition name="calculateHours">
+        <service-call name="durion.shopmgr.DurShopMgrServices.calculate#WorkLogHours"/>
+        <default-response url="."/>
+    </transition>
+
+    <actions>
+        <entity-find-one entity-name="durion.shopmgr.DurShopWorkLog" value-field="workLog"/>
+    </actions>
+
+    <widgets>
+        <form-single name="EditWorkLogForm" map="workLog" transition="updateWorkLog">
+            <field name="workLogId"><default-field><display/></default-field></field>
+            <field name="appointmentId"><default-field title="Appointment">
+                <display-entity entity-name="durion.shopmgr.DurShopAppointment" text="Appt ${appointmentId}"/>
+            </default-field></field>
+            <field name="mechanicId"><default-field title="Mechanic">
+                <display-entity entity-name="durion.shopmgr.DurShopMechanic" text="${firstName} ${lastName}"/>
+            </default-field></field>
+            <field name="workDate"><default-field><date-time type="date"/></default-field></field>
+            <field name="startTime"><default-field><date-time type="date-time"/></default-field></field>
+            <field name="endTime"><default-field><date-time type="date-time"/></default-field></field>
+            <field name="hoursWorked"><default-field>
+                <text-line format="#0.00"/>
+            </default-field></field>
+            <field name="billableHours"><default-field><text-line format="#0.00"/></default-field></field>
+            <field name="serviceTypeId"><default-field title="Service Type">
+                <drop-down>
+                    <entity-options entity-name="durion.shopmgr.DurShopServiceType">
+                        <entity-options-option key="${serviceTypeId}" text="${serviceTypeName}"/>
+                    </entity-options>
+                </drop-down>
+            </default-field></field>
+            <field name="description"><default-field title="Work Performed">
+                <text-area rows="4"/>
+            </default-field></field>
+            <field name="statusId"><default-field title="Status">
+                <drop-down>
+                    <option key="WORK_IN_PROGRESS" text="In Progress"/>
+                    <option key="WORK_COMPLETED" text="Completed"/>
+                    <option key="WORK_PAUSED" text="Paused"/>
+                </drop-down>
+            </default-field></field>
+            <field name="notes"><default-field><text-area rows="2"/></default-field></field>
+            <field name="submitButton"><default-field title="Update"><submit/></default-field></field>
+            <field name="calculateButton"><default-field title="">
+                <link url="calculateHours" text="Calculate Hours from Times"/>
+            </default-field></field>
+            <field name="completeButton"><default-field title="">
+                <link url="completeWorkLog" text="Complete Work Log" btn-type="success"/>
+            </default-field></field>
+        </form-single>
+    </widgets>
+</screen>

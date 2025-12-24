@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+        default-menu-title="Schedule Appointment"
+        default-menu-index="1">
+
+    <transition name="createAppointment">
+        <service-call name="durion.shopmgr.DurShopMgrServices.create#Appointment"/>
+        <default-response url="../AppointmentFind"/>
+    </transition>
+
+    <actions>
+        <set field="nowTimestamp" from="ec.user.nowTimestamp"/>
+    </actions>
+
+    <widgets>
+        <form-single name="CreateAppointmentForm" transition="createAppointment">
+            <field name="customerId"><default-field title="Customer">
+                <drop-down>
+                    <entity-options entity-name="durion.crm.DurCustomer">
+                        <entity-options-option key="${customerId}" text="${firstName} ${lastName} [${customerType}]"/>
+                    </entity-options>
+                </drop-down>
+            </default-field></field>
+            <field name="vehicleId"><default-field title="Vehicle">
+                <drop-down>
+                    <entity-options entity-name="durion.crm.DurVehicle">
+                        <entity-options-option key="${vehicleId}" text="${year} ${make} ${model} - ${vin}"/>
+                    </entity-options>
+                </drop-down>
+            </default-field></field>
+            <field name="appointmentDate"><default-field><date-time type="date-time"/></default-field></field>
+            <field name="estimatedDuration"><default-field title="Estimated Hours"><text-line format="#0.00"/></default-field></field>
+            <field name="scheduledStartTime"><default-field title="Start Time"><date-time type="time"/></default-field></field>
+            <field name="scheduledEndTime"><default-field title="End Time"><date-time type="time"/></default-field></field>
+            <field name="mechanicId"><default-field title="Assign Mechanic">
+                <drop-down allow-empty="true">
+                    <entity-options entity-name="durion.shopmgr.DurShopMechanic">
+                        <entity-options-option key="${mechanicId}" text="${firstName} ${lastName} [${skillLevel}]"/>
+                        <entity-find>
+                            <econdition field-name="statusId" value="MECHANIC_ACTIVE"/>
+                        </entity-find>
+                    </entity-options>
+                </drop-down>
+            </default-field></field>
+            <field name="locationId"><default-field title="Assign Bay/Location">
+                <drop-down allow-empty="true">
+                    <entity-options entity-name="durion.shopmgr.DurShopLocation">
+                        <entity-options-option key="${locationId}" text="${locationName} [${locationType}]"/>
+                        <entity-find>
+                            <econdition field-name="statusId" operator="not-equals" value="LOCATION_OUT_OF_SERVICE"/>
+                        </entity-find>
+                    </entity-options>
+                </drop-down>
+            </default-field></field>
+            <field name="serviceTypes"><default-field title="Service Types">
+                <text-line size="60"/>
+            </default-field></field>
+            <field name="description"><default-field title="Customer Complaint/Request">
+                <text-area rows="4"/>
+            </default-field></field>
+            <field name="priority"><default-field>
+                <drop-down>
+                    <option key="URGENT" text="Urgent"/>
+                    <option key="HIGH" text="High"/>
+                    <option key="NORMAL" text="Normal"/>
+                    <option key="LOW" text="Low"/>
+                </drop-down>
+            </default-field></field>
+            <field name="notes"><default-field><text-area rows="2"/></default-field></field>
+            <field name="submitButton"><default-field title="Create Appointment"><submit/></default-field></field>
+        </form-single>
+    </widgets>
+</screen>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+        default-menu-title="Appointments"
+        default-menu-index="2">
+
+    <transition name="editAppointment">
+        <default-response url="../AppointmentEdit"/>
+    </transition>
+
+    <transition name="createAppointment">
+        <default-response url="../AppointmentCreate"/>
+    </transition>
+
+    <actions>
+        <entity-find entity-name="durion.shopmgr.DurShopAppointment" list="appointmentList">
+            <search-form-inputs default-order-by="-appointmentDate"/>
+        </entity-find>
+    </actions>
+
+    <widgets>
+        <link url="createAppointment" text="Create New Appointment" btn-type="success"/>
+        
+        <form-list name="AppointmentList" list="appointmentList" skip-form="true">
+            <field name="appointmentId">
+                <default-field><link url="editAppointment" text="${appointmentId}" link-type="anchor"/></default-field>
+            </field>
+            <field name="appointmentDate"><default-field><display format="yyyy-MM-dd HH:mm"/></default-field></field>
+            <field name="customerId"><default-field title="Customer">
+                <display-entity entity-name="durion.crm.DurCustomer" text="${firstName} ${lastName}"/>
+            </default-field></field>
+            <field name="vehicleId"><default-field title="Vehicle">
+                <display-entity entity-name="durion.crm.DurVehicle" text="${year} ${make} ${model}"/>
+            </default-field></field>
+            <field name="mechanicId"><default-field title="Mechanic">
+                <display-entity entity-name="durion.shopmgr.DurShopMechanic" text="${firstName} ${lastName}"/>
+            </default-field></field>
+            <field name="locationId"><default-field title="Location">
+                <display-entity entity-name="durion.shopmgr.DurShopLocation" text="${locationName}"/>
+            </default-field></field>
+            <field name="serviceTypes"><default-field><display/></default-field></field>
+            <field name="priority"><default-field><display/></default-field></field>
+            <field name="statusId"><default-field title="Status"><display/></default-field></field>
+        </form-list>
+    </widgets>
+</screen>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+        default-menu-title="Edit Appointment"
+        default-menu-include="false">
+
+    <parameter name="appointmentId" required="true"/>
+
+    <transition name="updateAppointment">
+        <service-call name="durion.shopmgr.DurShopMgrServices.update#Appointment"/>
+        <default-response url="."/>
+    </transition>
+
+    <transition name="assignMechanic">
+        <service-call name="durion.shopmgr.DurShopMgrServices.assign#MechanicToAppointment"/>
+        <default-response url="."/>
+    </transition>
+
+    <transition name="assignLocation">
+        <service-call name="durion.shopmgr.DurShopMgrServices.assign#LocationToAppointment"/>
+        <default-response url="."/>
+    </transition>
+
+    <transition name="cancelAppointment">
+        <service-call name="durion.shopmgr.DurShopMgrServices.cancel#Appointment"/>
+        <default-response url="../AppointmentFind"/>
+    </transition>
+
+    <actions>
+        <entity-find-one entity-name="durion.shopmgr.DurShopAppointment" value-field="appointment"/>
+    </actions>
+
+    <widgets>
+        <container-row>
+            <row-col lg="8">
+                <form-single name="EditAppointmentForm" map="appointment" transition="updateAppointment">
+                    <field name="appointmentId"><default-field><display/></default-field></field>
+                    <field name="customerId"><default-field title="Customer">
+                        <display-entity entity-name="durion.crm.DurCustomer" text="${firstName} ${lastName}"/>
+                    </default-field></field>
+                    <field name="vehicleId"><default-field title="Vehicle">
+                        <display-entity entity-name="durion.crm.DurVehicle" text="${year} ${make} ${model}"/>
+                    </default-field></field>
+                    <field name="appointmentDate"><default-field><date-time type="date-time"/></default-field></field>
+                    <field name="estimatedDuration"><default-field title="Estimated Hours"><text-line format="#0.00"/></default-field></field>
+                    <field name="scheduledStartTime"><default-field title="Scheduled Start"><date-time type="date-time"/></default-field></field>
+                    <field name="scheduledEndTime"><default-field title="Scheduled End"><date-time type="date-time"/></default-field></field>
+                    <field name="actualStartTime"><default-field title="Actual Start"><date-time type="date-time"/></default-field></field>
+                    <field name="actualEndTime"><default-field title="Actual End"><date-time type="date-time"/></default-field></field>
+                    <field name="mechanicId"><default-field title="Assigned Mechanic">
+                        <drop-down allow-empty="true">
+                            <entity-options entity-name="durion.shopmgr.DurShopMechanic">
+                                <entity-options-option key="${mechanicId}" text="${firstName} ${lastName}"/>
+                            </entity-options>
+                        </drop-down>
+                    </default-field></field>
+                    <field name="locationId"><default-field title="Assigned Location">
+                        <drop-down allow-empty="true">
+                            <entity-options entity-name="durion.shopmgr.DurShopLocation">
+                                <entity-options-option key="${locationId}" text="${locationName}"/>
+                            </entity-options>
+                        </drop-down>
+                    </default-field></field>
+                    <field name="serviceTypes"><default-field><text-line size="60"/></default-field></field>
+                    <field name="description"><default-field><text-area rows="4"/></default-field></field>
+                    <field name="priority"><default-field>
+                        <drop-down>
+                            <option key="URGENT"/>
+                            <option key="HIGH"/>
+                            <option key="NORMAL"/>
+                            <option key="LOW"/>
+                        </drop-down>
+                    </default-field></field>
+                    <field name="statusId"><default-field title="Status">
+                        <drop-down>
+                            <option key="APPT_SCHEDULED" text="Scheduled"/>
+                            <option key="APPT_CONFIRMED" text="Confirmed"/>
+                            <option key="APPT_IN_PROGRESS" text="In Progress"/>
+                            <option key="APPT_COMPLETED" text="Completed"/>
+                            <option key="APPT_CANCELLED" text="Cancelled"/>
+                        </drop-down>
+                    </default-field></field>
+                    <field name="orderId"><default-field title="Work Order">
+                        <text-line/>
+                    </default-field></field>
+                    <field name="notes"><default-field><text-area rows="3"/></default-field></field>
+                    <field name="submitButton"><default-field title="Update"><submit/></default-field></field>
+                    <field name="cancelButton"><default-field title="">
+                        <link url="cancelAppointment" text="Cancel Appointment" confirmation="Are you sure?"/>
+                    </default-field></field>
+                </form-single>
+            </row-col>
+        </container-row>
+    </widgets>
+</screen>

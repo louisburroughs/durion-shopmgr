@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">
+
+    <entity entity-name="DurShopAppointment" package-name="durion.shopmgr" table-name="DUR_SHOP_APPOINTMENT">
+        <description>Customer appointments for service/repair work</description>
+        <field name="appointmentId" type="id" is-pk="true"/>
+        <field name="customerId" type="id" required="true">
+            <description>Link to customer in durion-crm</description>
+        </field>
+        <field name="vehicleId" type="id" required="true">
+            <description>Link to vehicle in durion-crm</description>
+        </field>
+        <field name="appointmentDate" type="date-time" required="true"/>
+        <field name="estimatedDuration" type="number-decimal">
+            <description>Estimated duration in hours</description>
+        </field>
+        <field name="scheduledStartTime" type="date-time"/>
+        <field name="scheduledEndTime" type="date-time"/>
+        <field name="actualStartTime" type="date-time"/>
+        <field name="actualEndTime" type="date-time"/>
+        <field name="mechanicId" type="id">
+            <description>Assigned mechanic</description>
+        </field>
+        <field name="locationId" type="id">
+            <description>Assigned bay/location</description>
+        </field>
+        <field name="serviceTypes" type="text-medium">
+            <description>Comma-separated service type codes</description>
+        </field>
+        <field name="description" type="text-long">
+            <description>Customer complaint/requested services</description>
+        </field>
+        <field name="statusId" type="text-short" default="APPT_SCHEDULED">
+            <description>APPT_SCHEDULED, APPT_CONFIRMED, APPT_IN_PROGRESS, APPT_COMPLETED, APPT_CANCELLED</description>
+        </field>
+        <field name="priority" type="text-short" default="NORMAL">
+            <description>URGENT, HIGH, NORMAL, LOW</description>
+        </field>
+        <field name="orderId" type="id">
+            <description>Link to sales order when appointment converts to work order</description>
+        </field>
+        <field name="notes" type="text-long"/>
+        <field name="createdDate" type="date-time" default="ec.user.nowTimestamp"/>
+        <field name="updatedDate" type="date-time" update="ec.user.nowTimestamp"/>
+        <relationship type="one" related-entity-name="DurShopMechanic" short-alias="mechanic">
+            <key-map field-name="mechanicId" related-field-name="mechanicId"/>
+        </relationship>
+        <relationship type="one" related-entity-name="DurShopLocation" short-alias="location">
+            <key-map field-name="locationId" related-field-name="locationId"/>
+        </relationship>
+    </entity>
+
+</entities>

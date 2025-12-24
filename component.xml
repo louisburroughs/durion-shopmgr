@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/moqui-conf-3.xsd"
+           name="durion-shopmgr" version="1.0.0">
+    <description>Durion Shop Manager - Shop scheduling, mechanic assignment, and work tracking for automotive service centers</description>
+    
+    <!-- Dependencies -->
+    <depends-on name="durion-common"/>
+    <depends-on name="durion-crm"/>
+    <depends-on name="durion-product"/>
+    
+    <!-- Entity definitions for shop management -->
+    <entity-facade>
+        <datasource group-name="durion" database-conf-name="durion"/>
+    </entity-facade>
+    
+</component>

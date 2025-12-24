@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-facade-xml type="demo">
+
+    <!-- Sample Mechanics -->
+    <durion.shopmgr.DurShopMechanic mechanicId="MECH001" 
+        firstName="John" lastName="Martinez" employeeNumber="EMP-101"
+        email="john.martinez@durion.com" phone="555-0101"
+        skillLevel="MASTER" specializations="BRAKES,ELECTRICAL,ENGINE"
+        certifications="ASE Master Technician, State Inspector"
+        hourlyRate="45.00" hireDate="2020-03-15"
+        statusId="MECHANIC_ACTIVE"/>
+
+    <durion.shopmgr.DurShopMechanic mechanicId="MECH002"
+        firstName="Sarah" lastName="Johnson" employeeNumber="EMP-102"
+        email="sarah.johnson@durion.com" phone="555-0102"
+        skillLevel="JOURNEYMAN" specializations="TRANSMISSION,TIRES"
+        certifications="ASE Certified, Tire Specialist"
+        hourlyRate="35.00" hireDate="2021-06-01"
+        statusId="MECHANIC_ACTIVE"/>
+
+    <durion.shopmgr.DurShopMechanic mechanicId="MECH003"
+        firstName="Mike" lastName="Chen" employeeNumber="EMP-103"
+        email="mike.chen@durion.com" phone="555-0103"
+        skillLevel="JOURNEYMAN" specializations="ENGINE,DIAGNOSTIC"
+        certifications="ASE Certified"
+        hourlyRate="38.00" hireDate="2021-09-15"
+        statusId="MECHANIC_ACTIVE"/>
+
+    <durion.shopmgr.DurShopMechanic mechanicId="MECH004"
+        firstName="Emily" lastName="Rodriguez" employeeNumber="EMP-104"
+        email="emily.rodriguez@durion.com" phone="555-0104"
+        skillLevel="APPRENTICE" specializations="BRAKES,TIRES"
+        certifications="Trade School Graduate"
+        hourlyRate="22.00" hireDate="2023-01-10"
+        statusId="MECHANIC_ACTIVE"/>
+
+    <!-- Shop Locations/Bays -->
+    <durion.shopmgr.DurShopLocation locationId="LOC001"
+        locationName="Bay 1 - Full Service" locationCode="BAY-1"
+        locationType="BAY" capacity="1"
+        equipment="2-post lift, diagnostic computer, air tools"
+        statusId="LOCATION_AVAILABLE"/>
+
+    <durion.shopmgr.DurShopLocation locationId="LOC002"
+        locationName="Bay 2 - Full Service" locationCode="BAY-2"
+        locationType="BAY" capacity="1"
+        equipment="4-post lift, alignment rack, diagnostic computer"
+        statusId="LOCATION_AVAILABLE"/>
+
+    <durion.shopmgr.DurShopLocation locationId="LOC003"
+        locationName="Bay 3 - Quick Lane" locationCode="QUICK-1"
+        locationType="QUICK_LANE" capacity="2"
+        equipment="Lube equipment, tire changer, balancer"
+        statusId="LOCATION_AVAILABLE"/>
+
+    <durion.shopmgr.DurShopLocation locationId="LOC004"
+        locationName="Diagnostic Bay" locationCode="DIAG-1"
+        locationType="DIAGNOSTIC" capacity="1"
+        equipment="Advanced diagnostic equipment, scan tools, oscilloscope"
+        statusId="LOCATION_AVAILABLE"/>
+
+    <!-- Service Types -->
+    <durion.shopmgr.DurShopServiceType serviceTypeId="SVC_TYPE_001"
+        serviceTypeName="Oil Change" serviceTypeCode="OIL-CHG"
+        category="MAINTENANCE" 
+        description="Full oil and filter change with multi-point inspection"
+        estimatedDuration="0.5" requiredSkillLevel="BASIC"
+        statusId="SERVICE_TYPE_ACTIVE"/>
+
+    <durion.shopmgr.DurShopServiceType serviceTypeId="SVC_TYPE_002"
+        serviceTypeName="Brake Service" serviceTypeCode="BRAKE"
+        category="REPAIR"
+        description="Brake pad/rotor replacement and system inspection"
+        estimatedDuration="2.0" requiredSkillLevel="INTERMEDIATE"
+        statusId="SERVICE_TYPE_ACTIVE"/>
+
+    <durion.shopmgr.DurShopServiceType serviceTypeId="SVC_TYPE_003"
+        serviceTypeName="Tire Service" serviceTypeCode="TIRE"
+        category="TIRES"
+        description="Tire mounting, balancing, rotation"
+        estimatedDuration="1.0" requiredSkillLevel="BASIC"
+        statusId="SERVICE_TYPE_ACTIVE"/>
+
+    <durion.shopmgr.DurShopServiceType serviceTypeId="SVC_TYPE_004"
+        serviceTypeName="Engine Diagnostic" serviceTypeCode="DIAG"
+        category="DIAGNOSTIC"
+        description="Computer diagnostic scan and analysis"
+        estimatedDuration="1.5" requiredSkillLevel="ADVANCED"
+        statusId="SERVICE_TYPE_ACTIVE"/>
+
+    <durion.shopmgr.DurShopServiceType serviceTypeId="SVC_TYPE_005"
+        serviceTypeName="State Inspection" serviceTypeCode="INSPECT"
+        category="INSPECTION"
+        description="State safety and emissions inspection"
+        estimatedDuration="0.75" requiredSkillLevel="BASIC"
+        statusId="SERVICE_TYPE_ACTIVE"/>
+
+    <!-- Sample Appointments (assuming customer/vehicle data exists from durion-crm) -->
+    <durion.shopmgr.DurShopAppointment appointmentId="APPT001"
+        customerId="CUST001" vehicleId="VEH001"
+        appointmentDate="2024-12-27 09:00:00"
+        estimatedDuration="2.0"
+        scheduledStartTime="2024-12-27 09:00:00"
+        scheduledEndTime="2024-12-27 11:00:00"
+        mechanicId="MECH001" locationId="LOC001"
+        serviceTypes="BRAKE"
+        description="Customer reports squealing noise when braking"
+        priority="HIGH" statusId="APPT_SCHEDULED"/>
+
+    <durion.shopmgr.DurShopAppointment appointmentId="APPT002"
+        customerId="CUST002" vehicleId="VEH002"
+        appointmentDate="2024-12-27 10:00:00"
+        estimatedDuration="0.5"
+        scheduledStartTime="2024-12-27 10:00:00"
+        scheduledEndTime="2024-12-27 10:30:00"
+        mechanicId="MECH004" locationId="LOC003"
+        serviceTypes="OIL-CHG"
+        description="Regular oil change service"
+        priority="NORMAL" statusId="APPT_CONFIRMED"/>
+
+    <durion.shopmgr.DurShopAppointment appointmentId="APPT003"
+        customerId="CUST003" vehicleId="VEH003"
+        appointmentDate="2024-12-27 13:00:00"
+        estimatedDuration="1.0"
+        scheduledStartTime="2024-12-27 13:00:00"
+        scheduledEndTime="2024-12-27 14:00:00"
+        mechanicId="MECH002" locationId="LOC003"
+        serviceTypes="TIRE"
+        description="Tire rotation and balance"
+        priority="NORMAL" statusId="APPT_SCHEDULED"/>
+
+    <durion.shopmgr.DurShopAppointment appointmentId="APPT004"
+        customerId="CUST001" vehicleId="VEH004"
+        appointmentDate="2024-12-27 14:00:00"
+        estimatedDuration="1.5"
+        scheduledStartTime="2024-12-27 14:00:00"
+        scheduledEndTime="2024-12-27 15:30:00"
+        mechanicId="MECH003" locationId="LOC004"
+        serviceTypes="DIAG"
+        description="Check engine light on, needs diagnostic scan"
+        priority="HIGH" statusId="APPT_SCHEDULED"/>
+
+    <!-- Vehicles Currently in Shop -->
+    <durion.shopmgr.DurShopVehicle shopVehicleId="SHOP_VEH_001"
+        vehicleId="VEH001" appointmentId="APPT001"
+        checkInDate="2024-12-27 08:45:00" checkInMileage="45230"
+        locationId="LOC001" mechanicId="MECH001"
+        statusId="VEHICLE_IN_PROGRESS"
+        keyLocation="Key Box A-1"
+        notes="Customer waiting in lounge"/>
+
+    <!-- Work Logs -->
+    <durion.shopmgr.DurShopWorkLog workLogId="WORK001"
+        appointmentId="APPT001" shopVehicleId="SHOP_VEH_001"
+        mechanicId="MECH001" workDate="2024-12-27"
+        startTime="2024-12-27 09:00:00" endTime="2024-12-27 10:30:00"
+        hoursWorked="1.5" serviceTypeId="SVC_TYPE_002"
+        description="Replaced front brake pads and resurfaced rotors. Test drive completed."
+        billableHours="2.0" statusId="WORK_COMPLETED"/>
+
+    <durion.shopmgr.DurShopWorkLog workLogId="WORK002"
+        appointmentId="APPT002"
+        mechanicId="MECH004" workDate="2024-12-27"
+        startTime="2024-12-27 10:00:00" endTime="2024-12-27 10:25:00"
+        hoursWorked="0.42" serviceTypeId="SVC_TYPE_001"
+        description="Completed oil change with synthetic 5W-30, replaced filter, topped fluids"
+        billableHours="0.5" statusId="WORK_COMPLETED"/>
+
+    <durion.shopmgr.DurShopWorkLog workLogId="WORK003"
+        appointmentId="APPT003"
+        mechanicId="MECH002" workDate="2024-12-27"
+        startTime="2024-12-27 13:00:00"
+        hoursWorked="0" serviceTypeId="SVC_TYPE_003"
+        description="In progress - rotating and balancing tires"
+        billableHours="1.0" statusId="WORK_IN_PROGRESS"/>
+
+    <!-- Shifts -->
+    <durion.shopmgr.DurShopShift shiftId="SHIFT001"
+        shiftName="Morning Shift" shiftCode="AM"
+        startTime="07:00:00" endTime="15:00:00"
+        daysOfWeek="MON,TUE,WED,THU,FRI"
+        statusId="SHIFT_ACTIVE"/>
+
+    <durion.shopmgr.DurShopShift shiftId="SHIFT002"
+        shiftName="Afternoon Shift" shiftCode="PM"
+        startTime="15:00:00" endTime="23:00:00"
+        daysOfWeek="MON,TUE,WED,THU,FRI"
+        statusId="SHIFT_ACTIVE"/>
+
+    <durion.shopmgr.DurShopShift shiftId="SHIFT003"
+        shiftName="Saturday Shift" shiftCode="SAT"
+        startTime="08:00:00" endTime="17:00:00"
+        daysOfWeek="SAT"
+        statusId="SHIFT_ACTIVE"/>
+
+</entity-facade-xml>

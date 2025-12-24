@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">
+
+    <entity entity-name="DurShopLocation" package-name="durion.shopmgr" table-name="DUR_SHOP_LOCATION">
+        <description>Shop bays/locations where work is performed</description>
+        <field name="locationId" type="id" is-pk="true"/>
+        <field name="locationName" type="text-medium" required="true"/>
+        <field name="locationCode" type="text-short">
+            <description>Short code like BAY-1, LIFT-A, etc.</description>
+        </field>
+        <field name="locationType" type="text-short">
+            <description>BAY, LIFT, QUICK_LANE, DIAGNOSTIC, DETAIL</description>
+        </field>
+        <field name="facilityId" type="id">
+            <description>Link to facility/shop location</description>
+        </field>
+        <field name="capacity" type="number-integer" default="1">
+            <description>Number of vehicles that can be serviced</description>
+        </field>
+        <field name="equipment" type="text-long">
+            <description>Available equipment: lift types, diagnostic tools, etc.</description>
+        </field>
+        <field name="statusId" type="text-short" default="LOCATION_AVAILABLE">
+            <description>LOCATION_AVAILABLE, LOCATION_IN_USE, LOCATION_OUT_OF_SERVICE</description>
+        </field>
+        <field name="notes" type="text-long"/>
+        <field name="createdDate" type="date-time" default="ec.user.nowTimestamp"/>
+        <field name="updatedDate" type="date-time" update="ec.user.nowTimestamp"/>
+    </entity>
+
+</entities>

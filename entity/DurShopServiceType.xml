@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">
+
+    <entity entity-name="DurShopServiceType" package-name="durion.shopmgr" table-name="DUR_SHOP_SERVICE_TYPE">
+        <description>Types of services offered by the shop</description>
+        <field name="serviceTypeId" type="id" is-pk="true"/>
+        <field name="serviceTypeName" type="text-medium" required="true"/>
+        <field name="serviceTypeCode" type="text-short">
+            <description>Short code for the service type</description>
+        </field>
+        <field name="category" type="text-short">
+            <description>MAINTENANCE, REPAIR, DIAGNOSTIC, INSPECTION, TIRES</description>
+        </field>
+        <field name="description" type="text-long"/>
+        <field name="estimatedDuration" type="number-decimal">
+            <description>Typical duration in hours</description>
+        </field>
+        <field name="requiredSkillLevel" type="text-short">
+            <description>Minimum skill level required</description>
+        </field>
+        <field name="statusId" type="text-short" default="SERVICE_TYPE_ACTIVE"/>
+        <field name="notes" type="text-long"/>
+        <field name="createdDate" type="date-time" default="ec.user.nowTimestamp"/>
+        <field name="updatedDate" type="date-time" update="ec.user.nowTimestamp"/>
+    </entity>
+
+</entities>
